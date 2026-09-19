@@ -1,0 +1,18 @@
+:root {
+  --color-bg: #0f0f0f;
+  --color-surface: #1a1a1a;
+  --color-border: #2a2a2a;
+  --color-primary: #3ecf8e;
+  --color-text: #e0e0e0;
+  --color-text-muted: #888;
+  --font-body: system-ui, -apple-system, sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font-body); background: var(--color-bg); color: var(--color-text); }
+a { color: var(--color-primary); text-decoration: none; }
+button { cursor: pointer; padding: 8px 16px; border: 1px solid var(--color-border); background: var(--color-surface); color: var(--color-text); border-radius: 6px; font-size: 14px; }
+button:hover { border-color: var(--color-primary); }
+input, select { padding: 8px 12px; background: var(--color-surface); border: 1px solid var(--color-border); color: var(--color-text); border-radius: 6px; font-size: 14px; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 8px 12px; border-bottom: 1px solid var(--color-border); text-align: left; font-size: 13px; }
+th { color: var(--color-text-muted); font-weight: 600; }

@@ -1,0 +1,9 @@
+node_modules/
+dist/
+studio/dist/
+coverage/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store

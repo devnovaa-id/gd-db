@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "skills": {
+    "data-encryption": {
+      "source": "aj-geddes/useful-ai-prompts",
+      "sourceType": "github",
+      "skillPath": "skills/data-encryption/SKILL.md",
+      "computedHash": "78f45efcae4037f3ec9760dc6c2690bd774560dc587fa88ac46a9ccb6a817b08"
+    },
+    "google-drive": {
+      "source": "membranedev/application-skills",
+      "sourceType": "github",
+      "skillPath": "skills/google-drive/SKILL.md",
+      "computedHash": "01fe704ef793a93588e3f1edb043bb982cea3487a92635b2e74b91cbf6861535"
+    },
+    "react-vite-best-practices": {
+      "source": "asyrafhussin/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/react-vite-best-practices/SKILL.md",
+      "computedHash": "82994934665a490b227fabdfec3d148b1fa291d77d82ccf978e761b9e1ff6e4c"
+    },
+    "react-vite-dashboard": {
+      "source": "google-labs-code/stitch-skills",
+      "sourceType": "github",
+      "skillPath": "plugins/stitch-build/skills/react-vite-dashboard/SKILL.md",
+      "computedHash": "0e876b7af074b77a237df2fd539c66f3ebe5fac7a8b64189c58ef0aa3c5f6518"
+    },
+    "vitest-testing": {
+      "source": "secondsky/claude-skills",
+      "sourceType": "github",
+      "skillPath": "plugins/vitest-testing/skills/vitest-testing/SKILL.md",
+      "computedHash": "2a937cd4b3ca9e062af25bfc5fb61a918d2b51db921c49c553345a48c35e30bb"
+    }
+  }
+}

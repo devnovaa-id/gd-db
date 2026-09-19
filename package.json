@@ -1,0 +1,89 @@
+{
+  "name": "gd-db",
+  "version": "0.1.0",
+  "description": "Open-source, free Google Drive-backed database with a supabase-js-compatible API, AES-256-GCM envelope encryption, and a bundled Studio dashboard.",
+  "author": "thiskey (DevNova-ID — DreamToRealiityCreative)",
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "database",
+    "google-drive",
+    "supabase",
+    "csv",
+    "storage",
+    "encryption",
+    "open-source"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/client/index.d.ts",
+      "import": "./dist/client/index.js",
+      "require": "./dist/client/index.cjs"
+    },
+    "./server": {
+      "types": "./dist/server/index.d.ts",
+      "import": "./dist/server/index.js",
+      "require": "./dist/server/index.cjs"
+    },
+    "./handler": {
+      "types": "./dist/handler/index.d.ts",
+      "import": "./dist/handler/index.js",
+      "require": "./dist/handler/index.cjs"
+    }
+  },
+  "main": "./dist/client/index.cjs",
+  "module": "./dist/client/index.js",
+  "types": "./dist/client/index.d.ts",
+  "bin": {
+    "gddb": "./dist/cli/index.js"
+  },
+  "files": [
+    "dist",
+    "studio/dist"
+  ],
+  "scripts": {
+    "build": "npm run build:lib && npm run build:studio",
+    "build:lib": "tsup",
+    "build:studio": "npm --prefix studio run build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "csv-parse": "^5.6.0",
+    "csv-stringify": "^6.5.2",
+    "googleapis": "^144.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^16.1.0",
+    "@types/node": "^26.6.2",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/coverage-v8": "^2.1.8",
+    "jsdom": "^25.0.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.1.1",
+    "tsup": "^8.3.6",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8",
+    "zod": "^3.24.1"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

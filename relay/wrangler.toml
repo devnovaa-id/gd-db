@@ -1,0 +1,8 @@
+name = "gd-db-oauth-relay"
+main = "worker.js"
+compatibility_date = "2026-09-19"
+
+# Secrets (set via `wrangler secret put`):
+#   GOOGLE_CLIENT_ID
+#   GOOGLE_CLIENT_SECRET
+#   GOOGLE_REDIRECT_URI
