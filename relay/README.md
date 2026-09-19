@@ -18,7 +18,7 @@ npm install -g wrangler
 wrangler login
 wrangler secret put GOOGLE_CLIENT_ID
 wrangler secret put GOOGLE_CLIENT_SECRET
-wrangler secret put GOOGLE_REDIRECT_URI   # e.g. https://auth.gd-db.dev/callback
+wrangler secret put GOOGLE_REDIRECT_URI   # e.g. https://gd-db.devnova.workers.dev/callback
 wrangler deploy
 ```
 

@@ -123,7 +123,7 @@ async function authCallback(code: string, config: HandlerConfig, handlerUrl: str
 }
 
 function getRelayUrl(config: HandlerConfig): string {
-  return config.relayUrl ?? process?.env?.GDDB_RELAY_URL ?? 'https://auth.gd-db.dev'
+  return config.relayUrl ?? process?.env?.GDDB_RELAY_URL ?? 'https://gd-db.devnova.workers.dev'
 }
 
 async function studioConnect(config: HandlerConfig, handlerUrl: string): Promise<Response> {

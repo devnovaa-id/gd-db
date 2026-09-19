@@ -6,7 +6,7 @@
 // Required secrets (set via `wrangler secret put`):
 //   GOOGLE_CLIENT_ID
 //   GOOGLE_CLIENT_SECRET
-//   GOOGLE_REDIRECT_URI  (e.g. https://auth.gd-db.dev/callback)
+//   GOOGLE_REDIRECT_URI  (e.g. https://gd-db.devnova.workers.dev/callback)
 
 const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive'
 
