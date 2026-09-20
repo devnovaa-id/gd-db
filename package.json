@@ -49,7 +49,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
-    "dev": "npm run build:lib && concurrently -n server,vite -c blue,green \"node scripts/dev-server.mjs\" \"npm --prefix studio run dev -- --port 3000 --host\"",
+    "dev": "npm run build:lib && GDB_DEV_EXTERNAL=1 concurrently -n server,vite -c blue,green \"node scripts/dev-server.mjs\" \"npm --prefix studio run dev -- --port 3000 --host\"",
     "dev:server": "npm run build:lib && node scripts/dev-server.mjs"
   },
   "dependencies": {
