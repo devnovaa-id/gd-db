@@ -1,12 +1,19 @@
 // gd-db dev server — runs the handler backend for local Studio development
 import http from 'node:http'
 import { readFileSync, existsSync } from 'node:fs'
-import { join } from 'node:path'
+import { join, dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { randomBytes } from 'node:crypto'
+import { spawn, spawnSync } from "node:child_process"
+
+// Resolve project root from this file's location (scripts/dev-server.mjs → root)
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+const PROJECT_ROOT = resolve(__dirname, '..')
 
 // --- Load .env ---
 function loadEnv() {
-  const envPath = join(process.cwd(), '.env')
+  const envPath = join(PROJECT_ROOT, '.env')
   if (!existsSync(envPath)) {
     console.log('⚠️  No .env found. Run "npx gddb setup" first. Using defaults.')
     return
@@ -24,6 +31,14 @@ function loadEnv() {
 }
 
 loadEnv()
+
+// --- Ensure dist exists ---
+const distPath = join(PROJECT_ROOT, 'dist', 'handler', 'index.js')
+if (!existsSync(distPath)) {
+  console.log('📦 Building library (tsup)... this may take a few seconds')
+  spawnSync('npx', ['tsup'], { cwd: PROJECT_ROOT, stdio: 'inherit' })
+  console.log('✓ Library built')
+}
 
 // --- Default schema for dev mode ---
 const defaultSchema = {
@@ -51,8 +66,8 @@ if (!dashboardPassword) {
 }
 
 // --- Create handler ---
-const { createHandler } = await import('../dist/handler/index.js')
-const { MockDriveAdapter } = await import('../dist/server/index.js')
+const { createHandler } = await import(distPath)
+const { MockDriveAdapter } = await import(join(PROJECT_ROOT, 'dist', 'server', 'index.js'))
 
 const drive = new MockDriveAdapter()
 const root = await drive.createFolder('root', 'gd-db')
