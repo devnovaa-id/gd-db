@@ -4,7 +4,20 @@ compatibility_date = "2026-09-19"
 workers_dev = true
 preview_urls = false
 
-# Secrets (set via `wrangler secret put`):
-#   GOOGLE_CLIENT_ID
-#   GOOGLE_CLIENT_SECRET
-#   GOOGLE_REDIRECT_URI
+# IMPORTANT: These must be set as RUNTIME secrets, NOT build variables!
+# Build variables (in Cloudflare dashboard → Build settings) are only
+# available during build, not at runtime when the Worker executes.
+#
+# Set them via ONE of these methods:
+#
+# Method 1 — Cloudflare Dashboard:
+#   Workers & Pages → gd-db → Settings → Variables and Secrets → Add
+#   - GOOGLE_CLIENT_ID      (type: Secret)
+#   - GOOGLE_CLIENT_SECRET  (type: Secret)
+#   - GOOGLE_REDIRECT_URI   (type: Text)
+#
+# Method 2 — Wrangler CLI:
+#   cd relay
+#   npx wrangler secret put GOOGLE_CLIENT_ID
+#   npx wrangler secret put GOOGLE_CLIENT_SECRET
+#   npx wrangler secret put GOOGLE_REDIRECT_URI
