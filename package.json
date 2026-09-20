@@ -2,7 +2,7 @@
   "name": "gd-db",
   "version": "0.1.0",
   "description": "Open-source, free Google Drive-backed database with a supabase-js-compatible API, AES-256-GCM envelope encryption, and a bundled Studio dashboard.",
-  "author": "thiskey (DevNova-ID — DreamToRealiityCreative)",
+  "author": "thiskey (DevNova-ID \u2014 DreamToRealiityCreative)",
   "license": "MIT",
   "type": "module",
   "keywords": [
@@ -48,7 +48,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "dev": "npm run build:lib && concurrently -n server,vite -c blue,green \"node scripts/dev-server.mjs\" \"npm --prefix studio run dev -- --port 3000 --host\"",
+    "dev:server": "npm run build:lib && node scripts/dev-server.mjs"
   },
   "dependencies": {
     "csv-parse": "^5.6.0",
@@ -69,7 +71,8 @@
     "tsup": "^8.3.6",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8",
-    "zod": "^3.24.1"
+    "zod": "^3.24.1",
+    "concurrently": "^9.1.0"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
