@@ -5,7 +5,7 @@ import { StorageEngine } from '../server/storage.js'
 import { GoogleDriveAdapter } from '../server/google-drive.js'
 import type { DriveAdapter } from '../server/drive-adapter.js'
 import type { HandlerConfig } from './types.js'
-import { encodeSessionToken, verifySessionToken, getHandlerUrl } from './session.js'
+import { encodeSessionToken, verifySessionToken, resolveHandlerUrl } from './session.js'
 
 export function createHandler(config: HandlerConfig): (req: Request) => Promise<Response> {
   let masterKey: MasterKey | null = null
@@ -40,12 +40,11 @@ export function createHandler(config: HandlerConfig): (req: Request) => Promise<
     storageEngine = new StorageEngine(config.schema, drive, storageFolder.id, masterKey!)
   }
 
-  const handlerUrl = getHandlerUrl()
-
   return async (req: Request): Promise<Response> => {
     await init()
     const url = new URL(req.url)
     const path = url.pathname
+    const handlerUrl = resolveHandlerUrl(req)
 
     // CORS preflight
     if (req.method === 'OPTIONS') {

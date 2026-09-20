@@ -4,6 +4,20 @@ export function getHandlerUrl(): string {
   return process?.env?.GDDB_HANDLER_URL ?? ''
 }
 
+// Derive handler URL from the request's Host header as fallback
+export function resolveHandlerUrl(req: Request): string {
+  const envUrl = getHandlerUrl()
+  if (envUrl) return envUrl
+  // Fallback: construct from request URL
+  try {
+    const url = new URL(req.url)
+    const proto = url.protocol === 'https:' || req.headers.get('x-forwarded-proto') === 'https' ? 'https' : 'http'
+    return `${proto}://${url.host}`
+  } catch {
+    return ''
+  }
+}
+
 export async function encodeSessionToken(masterKey: MasterKey): Promise<string> {
   const payload = { exp: Date.now() + 3600_000 }
   const data = new TextEncoder().encode(JSON.stringify(payload))
