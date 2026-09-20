@@ -1,4 +1,22 @@
 import { generateMasterKey } from '../server/crypto.js'
+import { writeFileSync, readFileSync, existsSync } from 'node:fs'
+import { join } from 'node:path'
+import { randomBytes } from 'node:crypto'
+
+function generateAnonKey(): string {
+  return randomBytes(32).toString('base64url')
+}
+
+function getEnvVar(content: string, key: string): string | null {
+  const match = content.match(new RegExp(`^${key}=(.*)$`, 'm'))
+  return match ? match[1].trim() : null
+}
+
+function setEnvVar(content: string, key: string, value: string): string {
+  const regex = new RegExp(`^${key}=.*$`, 'm')
+  if (regex.test(content)) return content.replace(regex, `${key}=${value}`)
+  return `${content.trimEnd()}\n${key}=${value}\n`
+}
 
 async function main() {
   const args = process.argv.slice(2)
@@ -10,7 +28,10 @@ async function main() {
   }
 
   if (cmd === 'init') {
-    console.log(`import { defineSchema } from 'gd-db/server'
+    const configPath = join(process.cwd(), 'gddb.config.ts')
+    if (!existsSync(configPath)) {
+      writeFileSync(configPath, `import { defineSchema } from 'gd-db/server'
+
 export default defineSchema({
   tables: {
     users: { columns: {
@@ -20,7 +41,70 @@ export default defineSchema({
     } },
   },
   storage: { buckets: { avatars: { public: true } } },
-})`)
+})
+`)
+      console.log('✓ Created gddb.config.ts')
+    } else {
+      console.log('→ gddb.config.ts already exists, skipping')
+    }
+    console.log('Run `gddb setup` next to auto-generate your .env file')
+    return
+  }
+
+  if (cmd === 'setup') {
+    const envPath = join(process.cwd(), '.env')
+    let content = existsSync(envPath) ? readFileSync(envPath, 'utf-8') : ''
+    const handlerUrl = args.includes('--url') ? args[args.indexOf('--url') + 1] : (getEnvVar(content, 'GDDB_HANDLER_URL') || 'https://your-deploy-url')
+
+    let changed = false
+    let anonKey = getEnvVar(content, 'GDDB_ANON_KEY')
+    if (!anonKey || anonKey === 'your-shared-anon-key') {
+      anonKey = generateAnonKey()
+      content = setEnvVar(content, 'GDDB_ANON_KEY', anonKey)
+      console.log(`✓ Generated GDDB_ANON_KEY`)
+      changed = true
+    } else {
+      console.log(`→ GDDB_ANON_KEY already set`)
+    }
+
+    let masterKey = getEnvVar(content, 'GDDB_MASTER_KEY')
+    if (!masterKey || masterKey === 'run-npx-gddb-keys-generate') {
+      masterKey = generateMasterKey()
+      content = setEnvVar(content, 'GDDB_MASTER_KEY', masterKey)
+      console.log(`✓ Generated GDDB_MASTER_KEY`)
+      changed = true
+    } else {
+      console.log(`→ GDDB_MASTER_KEY already set`)
+    }
+
+    if (!getEnvVar(content, 'GDDB_HANDLER_URL') || getEnvVar(content, 'GDDB_HANDLER_URL') === 'https://your-deploy-url') {
+      content = setEnvVar(content, 'GDDB_HANDLER_URL', handlerUrl)
+      console.log(`✓ Set GDDB_HANDLER_URL=${handlerUrl}`)
+      changed = true
+    }
+
+    if (!getEnvVar(content, 'GDDB_RELAY_URL')) {
+      content = setEnvVar(content, 'GDDB_RELAY_URL', 'https://gd-db.devnova.workers.dev')
+      console.log(`✓ Set GDDB_RELAY_URL=https://gd-db.devnova.workers.dev`)
+      changed = true
+    }
+
+    if (!getEnvVar(content, 'GDDB_TOKEN')) {
+      content = setEnvVar(content, 'GDDB_TOKEN', '')
+    }
+
+    if (!getEnvVar(content, 'GDDB_DASHBOARD_PASSWORD') || getEnvVar(content, 'GDDB_DASHBOARD_PASSWORD') === 'your-dashboard-password') {
+      content = setEnvVar(content, 'GDDB_DASHBOARD_PASSWORD', '')
+      console.log(`⚠️  GDDB_DASHBOARD_PASSWORD is empty — set it manually in .env`)
+      changed = true
+    }
+
+    writeFileSync(envPath, content)
+    console.log(`\n✅ .env ${changed ? 'created' : 'updated'} at ${envPath}`)
+    console.log(`\nNext steps:`)
+    console.log(`  1. Set GDDB_DASHBOARD_PASSWORD in .env`)
+    console.log(`  2. Update GDDB_HANDLER_URL to your deployed URL`)
+    console.log(`  3. Deploy your handler, open /studio, click "Connect Drive"`)
     return
   }
 
@@ -35,8 +119,9 @@ export default defineSchema({
   console.log(`gd-db CLI
 
 Usage:
-  gddb keys generate       Generate a new master encryption key
-  gddb init                 Print a starter gddb.config.ts
+  gddb init                 Create gddb.config.ts (starter schema)
+  gddb setup [--url URL]    Auto-generate .env (ANON_KEY, MASTER_KEY, etc.)
+  gddb keys generate        Generate a master encryption key
   gddb gen types            Print TypeScript types from schema
 
 Author: thiskey (DevNova-ID — DreamToRealiityCreative)`)
