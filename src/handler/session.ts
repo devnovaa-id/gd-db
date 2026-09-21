@@ -4,11 +4,18 @@ export function getHandlerUrl(): string {
   return process?.env?.GDDB_HANDLER_URL ?? ''
 }
 
-// Derive handler URL from the request's Host header as fallback
+// Derive handler URL from the request's Host header as fallback.
+// Always returns just the origin (protocol://host), no path.
 export function resolveHandlerUrl(req: Request): string {
   const envUrl = getHandlerUrl()
-  if (envUrl) return envUrl
-  // Fallback: construct from request URL
+  if (envUrl) {
+    try {
+      const parsed = new URL(envUrl)
+      return parsed.origin
+    } catch {
+      return envUrl.replace(/\/+$/, '')
+    }
+  }
   try {
     const url = new URL(req.url)
     const proto = url.protocol === 'https:' || req.headers.get('x-forwarded-proto') === 'https' ? 'https' : 'http'

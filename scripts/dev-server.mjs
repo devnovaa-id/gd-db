@@ -74,6 +74,13 @@ const root = await drive.createFolder('root', 'gd-db')
 await drive.createFolder(root.id, 'tables')
 await drive.createFolder(root.id, 'storage')
 
+// --- In-memory token store for dev mode ---
+let devStoredToken = null
+const devTokenStore = {
+  get: async () => devStoredToken,
+  set: async (t) => { devStoredToken = t },
+}
+
 const handler = createHandler({
   schema,
   anonKey,
@@ -81,6 +88,7 @@ const handler = createHandler({
   dashboardPassword,
   drive,
   rootFolderId: root.id,
+  tokenStore: devTokenStore,
   relayUrl: process.env.GDDB_RELAY_URL || 'https://gd-db.devnova.workers.dev',
 })
 

@@ -115,7 +115,7 @@ async function authCallback(code: string, config: HandlerConfig, handlerUrl: str
     const tokens = await exchangeCode(config.clientId, config.clientSecret, code, config.redirectUri)
     if (!tokens.refresh_token) throw new Error('No refresh_token received')
     await storeRefreshToken(tokens.refresh_token, config, mk)
-    return redirect(`${handlerUrl}/studio?connected=1`)
+    return redirect("/studio?connected=1")
   } catch (e) {
     return json({ error: (e as Error).message }, 500)
   }
@@ -152,7 +152,7 @@ async function relayPair(config: HandlerConfig, handlerUrl: string): Promise<Res
 async function relayComplete(url: URL, config: HandlerConfig, handlerUrl: string): Promise<Response> {
   const token = url.searchParams.get('token')
   const state = url.searchParams.get('state')
-  if (!token || !state) return redirect(`${handlerUrl}/studio?connected=0&error=missing_params`)
+  if (!token || !state) return redirect("/studio?connected=0&error=missing_params")
   const entry = otcStore.get(state)
   otcStore.delete(state)
   if (!entry || entry.expiry < Date.now()) {
@@ -162,9 +162,9 @@ async function relayComplete(url: URL, config: HandlerConfig, handlerUrl: string
   try {
     const mk = await importMasterKey(config.masterKey)
     await storeRefreshToken(token, config, mk)
-    return redirect(`${handlerUrl}/studio?connected=1`)
+    return redirect("/studio?connected=1")
   } catch (e) {
-    return redirect(`${handlerUrl}/studio?connected=0&error=${encodeURIComponent((e as Error).message)}`)
+    return redirect("/studio?connected=0&error=" + encodeURIComponent((e as Error).message))
   }
 }
 
